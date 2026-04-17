@@ -8,10 +8,31 @@ use crate::error::CompileResult;
 
 // 主入口：检查整个程序。
 pub fn check_program(program: &Program) -> CompileResult<()> {
+    check_v1_program_shape(program)?;
+
     // 每个函数独立检查，避免一个函数的符号污染另一个函数。
     for function in &program.function_list {
         check_function(function)?;
     }
+    Ok(())
+}
+
+fn check_v1_program_shape(program: &Program) -> CompileResult<()> {
+    if program.function_list.len() != 1 {
+        return Err("V1 subset: only one function is allowed (func main)".to_string());
+    }
+
+    let function = &program.function_list[0];
+    if function.name != "main" {
+        return Err("V1 subset: only func main is allowed".to_string());
+    }
+    if !function.parameter_list.is_empty() {
+        return Err("V1 subset: func main must not have parameters".to_string());
+    }
+    if function.return_type == TypeName::Float {
+        return Err("V1 subset: float return type is not supported".to_string());
+    }
+
     Ok(())
 }
 
@@ -22,6 +43,12 @@ fn check_function(function: &Function) -> CompileResult<()> {
 
     // 先把参数加入符号表，因为函数体内可以用参数。
     for parameter in &function.parameter_list {
+        if parameter.type_name == TypeName::Float {
+            return Err(format!(
+                "V1 subset: parameter {} uses unsupported float type",
+                parameter.name
+            ));
+        }
         type_by_name.insert(parameter.name.clone(), parameter.type_name);
     }
 
@@ -47,6 +74,11 @@ fn check_statement(statement: &Statement, type_by_name: &mut HashMap<String, Typ
     match statement {
         // 声明变量：检查是否重复声明。
         Statement::DeclareVariable { type_name, name } => {
+            if *type_name == TypeName::Float {
+                return Err(format!(
+                    "V1 subset: variable {name} uses unsupported float type"
+                ));
+            }
             if type_by_name.contains_key(name) {
                 return Err(format!("redeclaration of variable: {name}"));
             }
@@ -117,7 +149,7 @@ fn get_expression_type(expression: &Expression, type_by_name: &HashMap<String, T
 
         // 字面量：类型由字面量本身决定。
         Expression::Integer(_) => Ok(TypeName::Int),
-        Expression::Float(_) => Ok(TypeName::Float),
+        Expression::Float(_) => Err("V1 subset: float literal is not supported".to_string()),
         Expression::Bool(_) => Ok(TypeName::Bool),
 
         // 二元运算：需要检查左右类型是否兼容。
@@ -164,8 +196,8 @@ fn check_number_math_type(left_type: TypeName, right_type: TypeName) -> CompileR
         return Err(format!("arithmetic type mismatch: {left_type} vs {right_type}"));
     }
 
-    if left_type != TypeName::Int && left_type != TypeName::Float {
-        return Err(format!("arithmetic needs int or float, got {left_type}"));
+    if left_type != TypeName::Int {
+        return Err(format!("V1 subset: arithmetic needs int, got {left_type}"));
     }
 
     Ok(left_type)
@@ -177,8 +209,8 @@ fn check_number_compare_type(left_type: TypeName, right_type: TypeName) -> Compi
         return Err(format!("comparison type mismatch: {left_type} vs {right_type}"));
     }
 
-    if left_type != TypeName::Int && left_type != TypeName::Float {
-        return Err(format!("comparison needs int or float, got {left_type}"));
+    if left_type != TypeName::Int {
+        return Err(format!("V1 subset: comparison needs int, got {left_type}"));
     }
 
     Ok(TypeName::Bool)

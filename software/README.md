@@ -8,15 +8,18 @@
 - IR 生成（TAC 三地址码）
 - 后端汇编模板生成（`stm32f403` / `esp32`）
 
-项目根目录：`E:\02_competition\software`
+项目根目录：`E:\02_competition\Rust_Compiler\software`
 
 ## 1. 目录说明
 
 - `compiler/`：编译器源码（Rust）
-- `examples/main.mc`：示例输入源码
-- `examples/main_stm32.asm`：示例输出（STM32 风格）
-- `examples/main_esp32.asm`：示例输出（ESP32 风格）
-- `Docs/编译器设计文档.md`：设计文档
+- `examples/source/main.hopping`：示例输入源码
+- `examples/asm/main_stm32.asm`：示例输出（STM32 风格）
+- `examples/asm/main_esp32.asm`：示例输出（ESP32 风格）
+- `examples/ir/main.ir`：可读 IR 产物
+- `examples/bytecode/main.hbc`：端侧执行字节码
+- `firmware/`：STM32F407 与 ESP32S3 端侧解释器工程
+- `Docs/03_实现设计/MCU解释器V1设计.md`：字节码与 VM 规范
 
 ## 2. 环境要求
 
@@ -45,40 +48,58 @@
 ### 4.1 进入编译器目录
 
 ```bat
-cd /d E:\02_competition\software\compiler
+cd /d E:\02_competition\Rust_Compiler\software\compiler
 ```
 
 ### 4.2 生成 STM32 风格汇编
 
 ```bat
-cargo run -- ..\examples\main.mc -o ..\examples\main_stm32.asm --target stm32f403
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403
 ```
 
 ### 4.3 生成 ESP32 风格汇编
 
 ```bat
-cargo run -- ..\examples\main.mc -o ..\examples\main_esp32.asm --target esp32
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_esp32.asm --target esp32
 ```
 
 ### 4.4 查看输出结果
 
 ```bat
-type E:\02_competition\software\examples\main_stm32.asm
-type E:\02_competition\software\examples\main_esp32.asm
+type E:\02_competition\Rust_Compiler\software\examples\asm\main_stm32.asm
+type E:\02_competition\Rust_Compiler\software\examples\asm\main_esp32.asm
 ```
+
+### 4.5 同时落盘 IR 与字节码
+
+```bat
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403 --emit-ir ..\examples\ir\main.ir --emit-bytecode ..\examples\bytecode\main.hbc
+```
+
+或直接使用固定演示产物路径：
+
+```bat
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403 --emit-demo-artifacts
+```
+
+说明：
+
+- `--emit-ir` 输出可读 IR 文本
+- `--emit-bytecode` 输出二进制字节码文件（`.hbc`）
+- `--emit-demo-artifacts` 固定输出到 `examples/ir/main.ir` 与 `examples/bytecode/main.hbc`
 
 ## 5. 最快复现命令（复制即用）
 
 ```bat
 "C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-cd /d E:\02_competition\software\compiler
-cargo run -- ..\examples\main.mc -o ..\examples\main_stm32.asm --target stm32f403
-cargo run -- ..\examples\main.mc -o ..\examples\main_esp32.asm --target esp32
+cd /d E:\02_competition\Rust_Compiler\software\compiler
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_esp32.asm --target esp32
 ```
 
 ## 6. Demo 源码（当前）
 
-`examples/main.mc` 内容是一个简单函数，包含：
+`examples/source/main.hopping` 内容是一个简单函数，包含：
 
 - 变量声明与赋值
 - `if/else`
@@ -125,52 +146,85 @@ cargo run -- ..\examples\main.mc -o ..\examples\main_esp32.asm --target esp32
 
 ```bat
 "C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-cd /d E:\02_competition\software\compiler
-cargo run -- ..\examples\stm32_blink.mc -o ..\examples\stm32_blink.asm --target stm32f403
+cd /d E:\02_competition\Rust_Compiler\software\compiler
+cargo run -- ..\examples\source\stm32_blink.hopping -o ..\examples\asm\stm32_blink.asm --target stm32f403
 ```
 
 ### 9.2 生成 ESP32 点灯汇编
 
 ```bat
 "C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-cd /d E:\02_competition\software\compiler
-cargo run -- ..\examples\esp32_blink.mc -o ..\examples\esp32_blink.asm --target esp32
+cd /d E:\02_competition\Rust_Compiler\software\compiler
+cargo run -- ..\examples\source\esp32_blink.hopping -o ..\examples\asm\esp32_blink.asm --target esp32
 ```
 
 ### 9.3 Demo 文件说明
 
 - 输入源码：
-  - `examples/stm32_blink.mc`
-  - `examples/esp32_blink.mc`
+  - `examples/source/stm32_blink.hopping`
+  - `examples/source/esp32_blink.hopping`
 - 输出汇编：
-  - `examples/stm32_blink.asm`
-  - `examples/esp32_blink.asm`
+  - `examples/asm/stm32_blink.asm`
+  - `examples/asm/esp32_blink.asm`
 - GPIO 替换指引：
-  - `examples/gpio_interface_todo.md`
+  - `examples/notes/gpio_interface_todo.md`
 
 > 当前 GPIO 是占位接口变量，目的是先跑通编译链路。你可以按开发板手册把占位变量替换成真实寄存器/HAL 调用。
 > - 占位变量：`stm32_gpio_mode_reg` / `esp32_gpio_enable_reg`
 > - 真实寄存器：`GPIOA_MODER` / `GPIO_ENABLE_REG`
 > - 真实 HAL 调用：`HAL_GPIO_Init` / `HAL_GPIO_Init`
 
-## 10. 文件结构
+## 10. 端侧解释器 Demo（STM32F407 + ESP32S3）
+
+### 10.1 共享核心与平台目录
+
+- 共享 VM：`firmware/common/vm_core.c`
+- STM32F407：`firmware/stm32f407`
+- ESP32S3：`firmware/esp32s3`
+
+### 10.2 端侧日志口径
+
+两平台统一输出以下键值：
+
+- `vm_boot`
+- `vm_loaded`
+- `vm_retval`
+- `led_on`
+- `tick_ms`
+- `vm_load_err` / `vm_run_err`
+
+### 10.3 烧录方式（本轮）
+
+- STM32F407：`STM32CubeProgrammer`
+- ESP32S3：`idf.py flash monitor`（底层 `esptool`）
+
+详细步骤见：`Docs/03_实现设计/端侧Demo运行手册.md`
+
+## 11. 文件结构（当前）
 ``` 
 E:.
 ├─compiler
 │  ├─src
 │  │  ├─ast.rs
 │  │  ├─backend.rs
-│  │  ├─frontend.rs
+│  │  ├─bytecode.rs
 │  │  ├─ir.rs
 │  │  ├─lexer.rs
 │  │  ├─parser.rs
 │  │  ├─semantic.rs
 │  │  └─main.rs
-│  └─target
-│      ├─debug
-│      │      
-│      └─flycheck0
+├─examples
+│  ├─source
+│  ├─asm
+│  ├─ir
+│  └─bytecode
 ├─Docs
-│  └─design
-└─examples
+│  ├─01_入口
+│  ├─02_语言规范
+│  ├─03_实现设计
+│  └─99_历史资料
+└─firmware
+   ├─common
+   ├─stm32f407
+   └─esp32s3
 ```

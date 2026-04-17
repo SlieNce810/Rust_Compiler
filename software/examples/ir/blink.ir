@@ -1,0 +1,21 @@
+function main
+  counter = 0
+  limit = 10000
+  toggle = 0
+  label L0
+  t0 = counter < limit
+  ifz t0 goto L1
+  t1 = counter + 1
+  counter = t1
+  goto L0
+  label L1
+  t2 = counter == limit
+  ifz t2 goto L2
+  toggle = 1
+  goto L3
+  label L2
+  toggle = 0
+  label L3
+  return toggle
+end
+

@@ -1,0 +1,21 @@
+func int main() {
+    int counter;
+    int limit;
+    int toggle;
+
+    counter = 0;
+    limit = 10000;
+    toggle = 0;
+
+    while (counter < limit) {
+        counter = counter + 1;
+    }
+
+    if (counter == limit) {
+        toggle = 1;
+    } else {
+        toggle = 0;
+    }
+
+    return toggle;
+}

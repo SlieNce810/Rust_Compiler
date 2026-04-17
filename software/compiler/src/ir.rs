@@ -43,6 +43,23 @@ pub fn build_three_address_code(program: &Program) -> ThreeAddressProgram {
     ThreeAddressProgram { function_list }
 }
 
+// 导出 IR 文本：便于落盘、调试和和端侧协议对齐。
+pub fn build_ir_text(program: &ThreeAddressProgram) -> String {
+    let mut text = String::new();
+
+    for function in &program.function_list {
+        text.push_str(&format!("function {}\n", function.name));
+        for line in &function.line_list {
+            text.push_str("  ");
+            text.push_str(line);
+            text.push('\n');
+        }
+        text.push_str("end\n\n");
+    }
+
+    text
+}
+
 // 把代码块里的语句逐条转成三地址码。
 fn build_block_lines(block: &Block, context: &mut BuildContext) {
     for statement in &block.statement_list {

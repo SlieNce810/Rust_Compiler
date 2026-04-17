@@ -1,0 +1,25 @@
+function main
+  a = 4
+  b = 3
+  t0 = b * 2
+  t1 = a + t0
+  c = t1
+  t2 = c > 5
+  ifz t2 goto L0
+  t3 = c - 1
+  c = t3
+  goto L1
+  label L0
+  t4 = c + 1
+  c = t4
+  label L1
+  label L2
+  t5 = c > 0
+  ifz t5 goto L3
+  t6 = c - 1
+  c = t6
+  goto L2
+  label L3
+  return c
+end
+

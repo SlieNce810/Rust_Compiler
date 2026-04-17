@@ -1,0 +1,8 @@
+# Rust (compiler build output — do not commit)
+software/compiler/target/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
