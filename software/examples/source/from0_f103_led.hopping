@@ -1,0 +1,15 @@
+func int main() {
+    int counter;
+    int limit;
+    int pulse;
+
+    pulse = 1;
+    limit = 5000;
+    counter = limit;
+
+    while (counter > 0) {
+        counter = counter - 1;
+    }
+
+    return pulse;
+}

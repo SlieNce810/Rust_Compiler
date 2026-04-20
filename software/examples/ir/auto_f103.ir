@@ -1,0 +1,14 @@
+function main
+  pulse = 1
+  limit = 500
+  counter = limit
+  label L0
+  t0 = counter > 0
+  ifz t0 goto L1
+  t1 = counter - 1
+  counter = t1
+  goto L0
+  label L1
+  return pulse
+end
+

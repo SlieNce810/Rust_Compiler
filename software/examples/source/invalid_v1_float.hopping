@@ -1,5 +1,0 @@
-func int main() {
-    float x;
-    x = 1.5;
-    return 0;
-}

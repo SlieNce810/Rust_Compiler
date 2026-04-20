@@ -87,6 +87,15 @@ cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm -
 - `--emit-ir` 输出可读 IR 文本
 - `--emit-bytecode` 输出二进制字节码文件（`.hbc`）
 - `--emit-demo-artifacts` 固定输出到 `examples/ir/main.ir` 与 `examples/bytecode/main.hbc`
+- `--ai-explain-error` 编译失败时在终端输出 AI 修复建议（不再默认写失败 md）
+- `--ai-only-on-error` 仅在失败时触发 AI；成功编译时跳过 AI 报告生成
+- `--ai-report` 指定成功编译时 AI 报告输出路径（IR 讲解 + 测试建议）
+- `--ai-provider` 指定 AI Provider：`mock|local|deepseek`（`cloud` 作为 `deepseek` 兼容别名）
+- `--ai-api-key` 通过 CLI 传入 DeepSeek key（优先级最高）
+- DeepSeek 鉴权环境变量：`HOPPING_AI_API_KEY`（或兼容 `DEEPSEEK_API_KEY`）
+- 可选环境变量：
+  - `HOPPING_AI_BASE_URL`（默认 `https://api.deepseek.com`）
+  - `HOPPING_AI_MODEL`（默认 `deepseek-chat`）
 
 ## 5. 最快复现命令（复制即用）
 
@@ -95,6 +104,38 @@ cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm -
 cd /d E:\02_competition\Rust_Compiler\software\compiler
 cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403
 cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_esp32.asm --target esp32
+```
+
+## 5.1 AI 辅助示例（终端建议 + 成功报告）
+
+### 成功编译 + IR 讲解
+
+```bat
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403 --ai-report ..\examples\notes\ai_report_success.md --ai-provider mock
+```
+
+### 失败编译 + 错误解释
+
+```bat
+cargo run -- ..\examples\source\invalid_v1_float.hopping -o ..\examples\asm\invalid.asm --target stm32f403 --ai-explain-error --ai-provider mock
+```
+
+### DeepSeek 真模型错误修复建议（失败时，终端输出）
+
+```bat
+cargo run -- ..\examples\source\invalid_v1_float.hopping -o ..\examples\asm\invalid.asm --target stm32f403 --ai-explain-error --ai-provider deepseek --ai-api-key sk-xxxx
+```
+
+### 只在失败时启用 AI（成功不生成报告）
+
+```bat
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403 --ai-only-on-error --ai-explain-error --ai-provider deepseek --ai-api-key sk-xxxx
+```
+
+### 成功编译时生成 DeepSeek IR 报告
+
+```bat
+cargo run -- ..\examples\source\main.hopping -o ..\examples\asm\main_stm32.asm --target stm32f403 --ai-report ..\examples\notes\ai_report_success_deepseek.md --ai-provider deepseek --ai-api-key sk-xxxx
 ```
 
 ## 6. Demo 源码（当前）
@@ -180,6 +221,7 @@ cargo run -- ..\examples\source\esp32_blink.hopping -o ..\examples\asm\esp32_bli
 
 - 共享 VM：`firmware/common/vm_core.c`
 - STM32F407：`firmware/stm32f407`
+- STM32F103（指南者，点灯+LCD日志）：`firmware/stm32f103`
 - ESP32S3：`firmware/esp32s3`
 
 ### 10.2 端侧日志口径
@@ -199,6 +241,41 @@ cargo run -- ..\examples\source\esp32_blink.hopping -o ..\examples\asm\esp32_bli
 - ESP32S3：`idf.py flash monitor`（底层 `esptool`）
 
 详细步骤见：`Docs/03_实现设计/端侧Demo运行手册.md`
+
+## 10.4 双轨升级脚本（新增）
+
+### STM32F103
+
+- B 自动构建+下载（内置字节码）：
+  - `tools\one_click_hbc_to_f103.bat [examples/source/xxx.hopping] [flash_timeout_sec]`
+- A 真动态下载（UART 包下发）：
+  - `tools\uart_hbc_update_f103.bat [examples/source/xxx.hopping] <COMx> [115200]`
+- UART 发包脚本：
+  - `tools\send_hbc_to_f103.ps1 -HbcPath examples/bytecode/xxx.hbc -Port COM3 -BaudRate 115200`
+
+### ESP32S3
+
+- A 真动态下载（UART 包下发）：
+  - `tools\uart_hbc_update_esp32.bat [examples/source/xxx.hopping] [COMx] [115200]`
+
+> A 方案统一使用升级包头：`magic(HUP1) + version + length + crc32 + payload`。
+
+> 当前 `tools` 目录可用批处理脚本为：`one_click_hbc_to_f103.bat`、`uart_hbc_update_f103.bat`、`uart_hbc_update_esp32.bat`。
+
+### 10.5 脚本行为（当前版本）
+
+- `tools\one_click_hbc_to_f103.bat`
+  - 第二参数可选：`flash_timeout_sec`，默认 `20` 秒。
+  - 烧录优先使用 `STM32_Programmer_CLI`。
+  - 超时会输出 `FLASH_TIMEOUT`，并自动回退到 `ST-LINK_CLI`（若可用）。
+  - 若最终仍失败，会打印 `HEX` 路径用于手工烧录。
+
+- `tools\uart_hbc_update_f103.bat`
+  - `COMx` 是必填参数（不再默认 `COM3`）。
+  - 未传串口时会输出 `COM_PORT_REQUIRED` 并列出当前可用串口。
+
+- `warning: constant OP_NOP is never used`
+  - 这是 Rust 编译器告警，不影响 `.hbc` 生成与 UART 发包流程。
 
 ## 11. 文件结构（当前）
 ``` 

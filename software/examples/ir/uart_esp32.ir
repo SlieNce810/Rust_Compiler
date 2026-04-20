@@ -1,0 +1,28 @@
+function main
+  is_running = 1
+  led_state = 0
+  delay_limit = 5000
+  esp32_gpio_enable_reg = 1
+  label L0
+  ifz is_running goto L1
+  t0 = led_state == 0
+  ifz t0 goto L2
+  led_state = 1
+  goto L3
+  label L2
+  led_state = 0
+  label L3
+  esp32_gpio_output_reg = led_state
+  delay_counter = delay_limit
+  label L4
+  t1 = delay_counter > 0
+  ifz t1 goto L5
+  t2 = delay_counter - 1
+  delay_counter = t2
+  goto L4
+  label L5
+  goto L0
+  label L1
+  return 0
+end
+

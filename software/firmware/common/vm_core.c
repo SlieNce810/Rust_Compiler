@@ -70,13 +70,16 @@ static VmErrorCode parse_header(VmState *vm, const uint8_t *buffer, uint32_t siz
 /* 解析符号表区，建立 reg<->name 映射。 */
 static VmErrorCode parse_symbols(VmState *vm, const uint8_t *buffer, uint32_t size, uint32_t *cursor) {
     uint16_t index = 0;
+    uint32_t remain;
+    uint8_t reg;
+    uint16_t name_len;
 
     while (index < vm->program.symbol_count) {
-        uint32_t remain = size - *cursor;
+        remain = size - *cursor;
         if (remain < 3) return VM_ERR_PROGRAM_TRUNCATED;
 
-        uint8_t reg = buffer[*cursor + 0];
-        uint16_t name_len = read_u16(&buffer[*cursor + 1]);
+        reg = buffer[*cursor + 0];
+        name_len = read_u16(&buffer[*cursor + 1]);
         *cursor += 3;
 
         if (reg >= vm->program.reg_count) return VM_ERR_REG_OOB;

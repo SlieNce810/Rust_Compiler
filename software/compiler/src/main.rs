@@ -4,6 +4,7 @@
 use std::fs;
 use std::path::PathBuf;
 
+mod ai_assist;
 mod ast;
 mod backend;
 mod bytecode;
@@ -28,7 +29,13 @@ fn run_compile_flow() -> Result<(), String> {
 
     let options = parse_command_options(&command_args)?;
     let source_text = read_source_file(&options.input_path)?;
-    let compile_output = compile_source(&source_text, &options.target_name)?;
+    let compile_output = match compile_source(&source_text, &options.target_name) {
+        Ok(output) => output,
+        Err(compile_error) => {
+            print_failure_ai_guidance(&options, &source_text, &compile_error);
+            return Err(compile_error);
+        }
+    };
 
     save_text_file(&options.output_path, &compile_output.assembly_text)?;
     if let Some(path) = &options.ir_output_path {
@@ -43,6 +50,9 @@ fn run_compile_flow() -> Result<(), String> {
             &PathBuf::from("../examples/bytecode/main.hbc"),
             &compile_output.bytecode,
         )?;
+    }
+    if !options.ai_only_on_error {
+        write_success_ai_report(&options, &source_text, &compile_output.ir_text)?;
     }
 
     println!(
@@ -60,6 +70,11 @@ struct CommandOptions {
     ir_output_path: Option<PathBuf>,
     bytecode_output_path: Option<PathBuf>,
     emit_demo_artifacts: bool,
+    ai_explain_error: bool,
+    ai_only_on_error: bool,
+    ai_report_path: Option<PathBuf>,
+    ai_api_key: Option<String>,
+    ai_provider: ai_assist::AiProviderKind,
 }
 
 fn parse_command_options(command_args: &[String]) -> Result<CommandOptions, String> {
@@ -69,6 +84,11 @@ fn parse_command_options(command_args: &[String]) -> Result<CommandOptions, Stri
     let mut ir_output_path: Option<PathBuf> = None;
     let mut bytecode_output_path: Option<PathBuf> = None;
     let mut emit_demo_artifacts = false;
+    let mut ai_explain_error = false;
+    let mut ai_only_on_error = false;
+    let mut ai_report_path: Option<PathBuf> = None;
+    let mut ai_api_key: Option<String> = None;
+    let mut ai_provider = ai_assist::AiProviderKind::Mock;
 
     let mut index = 0;
     while index < command_args.len() {
@@ -81,6 +101,11 @@ fn parse_command_options(command_args: &[String]) -> Result<CommandOptions, Stri
             &mut ir_output_path,
             &mut bytecode_output_path,
             &mut emit_demo_artifacts,
+            &mut ai_explain_error,
+            &mut ai_only_on_error,
+            &mut ai_report_path,
+            &mut ai_api_key,
+            &mut ai_provider,
         )?;
     }
 
@@ -95,6 +120,11 @@ fn parse_command_options(command_args: &[String]) -> Result<CommandOptions, Stri
         ir_output_path,
         bytecode_output_path,
         emit_demo_artifacts,
+        ai_explain_error,
+        ai_only_on_error,
+        ai_report_path,
+        ai_api_key,
+        ai_provider,
     })
 }
 
@@ -107,6 +137,11 @@ fn parse_one_option(
     ir_output_path: &mut Option<PathBuf>,
     bytecode_output_path: &mut Option<PathBuf>,
     emit_demo_artifacts: &mut bool,
+    ai_explain_error: &mut bool,
+    ai_only_on_error: &mut bool,
+    ai_report_path: &mut Option<PathBuf>,
+    ai_api_key: &mut Option<String>,
+    ai_provider: &mut ai_assist::AiProviderKind,
 ) -> Result<usize, String> {
     let current = &command_args[index];
 
@@ -145,6 +180,40 @@ fn parse_one_option(
     if current == "--emit-demo-artifacts" {
         *emit_demo_artifacts = true;
         return Ok(index + 1);
+    }
+
+    if current == "--ai-explain-error" {
+        *ai_explain_error = true;
+        return Ok(index + 1);
+    }
+
+    if current == "--ai-only-on-error" {
+        *ai_only_on_error = true;
+        return Ok(index + 1);
+    }
+
+    if current == "--ai-report" {
+        let Some(value) = command_args.get(index + 1) else {
+            return Err("missing output path after --ai-report".to_string());
+        };
+        *ai_report_path = Some(PathBuf::from(value));
+        return Ok(index + 2);
+    }
+
+    if current == "--ai-provider" {
+        let Some(value) = command_args.get(index + 1) else {
+            return Err("missing provider after --ai-provider".to_string());
+        };
+        *ai_provider = ai_assist::AiProviderKind::parse(value)?;
+        return Ok(index + 2);
+    }
+
+    if current == "--ai-api-key" {
+        let Some(value) = command_args.get(index + 1) else {
+            return Err("missing api key after --ai-api-key".to_string());
+        };
+        *ai_api_key = Some(value.to_string());
+        return Ok(index + 2);
     }
 
     if current.starts_with('-') {
@@ -195,6 +264,67 @@ struct CompileOutput {
     bytecode: Vec<u8>,
 }
 
+fn print_failure_ai_guidance(
+    options: &CommandOptions,
+    source_text: &str,
+    compile_error: &str,
+) {
+    if !options.ai_explain_error {
+        return;
+    }
+
+    let request = ai_assist::ErrorExplainInput {
+        source_path: options.input_path.to_string_lossy().to_string(),
+        target_name: options.target_name.clone(),
+        source_excerpt: build_source_excerpt(source_text, 120),
+        compile_error: compile_error.to_string(),
+        provider: options.ai_provider,
+        api_key_override: options.ai_api_key.clone(),
+    };
+    match ai_assist::explain_error(&request) {
+        Ok(report) => eprintln!("\n===== AI Repair Guidance =====\n{}\n", report.markdown),
+        Err(error) => eprintln!(
+            "\n===== AI Repair Guidance =====\nAI assist unavailable: {error}\n"
+        ),
+    }
+}
+
+fn write_success_ai_report(
+    options: &CommandOptions,
+    source_text: &str,
+    ir_text: &str,
+) -> Result<(), String> {
+    let Some(report_path) = &options.ai_report_path else {
+        return Ok(());
+    };
+
+    let explain_request = ai_assist::IrExplainInput {
+        source_path: options.input_path.to_string_lossy().to_string(),
+        target_name: options.target_name.clone(),
+        source_excerpt: build_source_excerpt(source_text, 120),
+        ir_excerpt: build_source_excerpt(ir_text, 180),
+        provider: options.ai_provider,
+        api_key_override: options.ai_api_key.clone(),
+    };
+    let test_request = ai_assist::SuggestTestsInput {
+        source_path: options.input_path.to_string_lossy().to_string(),
+        target_name: options.target_name.clone(),
+        source_excerpt: build_source_excerpt(source_text, 120),
+        ir_excerpt: build_source_excerpt(ir_text, 180),
+        provider: options.ai_provider,
+        api_key_override: options.ai_api_key.clone(),
+    };
+
+    let mut sections = Vec::new();
+    sections.push(ai_assist::explain_ir(&explain_request)?.markdown);
+    sections.push(ai_assist::suggest_tests(&test_request)?.markdown);
+    save_text_file(report_path, &sections.join("\n\n"))
+}
+
+fn build_source_excerpt(text: &str, max_lines: usize) -> String {
+    text.lines().take(max_lines).collect::<Vec<_>>().join("\n")
+}
+
 fn get_usage_text() -> String {
-    "usage: mini_embedded_compiler <input.hopping> [-o output.asm] [--target stm32f403|esp32] [--emit-ir out.ir] [--emit-bytecode out.hbc] [--emit-demo-artifacts]".to_string()
+    "usage: mini_embedded_compiler <input.hopping> [-o output.asm] [--target stm32f403|esp32] [--emit-ir out.ir] [--emit-bytecode out.hbc] [--emit-demo-artifacts] [--ai-explain-error] [--ai-only-on-error] [--ai-report out.md] [--ai-provider mock|local|deepseek] [--ai-api-key sk-xxxx]".to_string()
 }

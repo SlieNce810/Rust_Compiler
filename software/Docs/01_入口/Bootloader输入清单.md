@@ -1,95 +1,96 @@
-# Bootloader 输入清单
-
-这份文档是开始设计下载协议、Flash 布局、热更新流程之前必须确认的信息。
-
-如果这些信息不完整，后面的 bootloader 方案很容易返工。
+# Bootloader 输入清单（已落地版）
 
 ## 1. 芯片与开发板
 
-- 芯片型号：
-- 开发板型号：
-- 核心架构：`Cortex-M / Xtensa / RISC-V / other`
-- Flash 容量：
-- RAM 容量：
+### STM32F103
+- 芯片型号：`STM32F103VE`
+- 开发板型号：野火 F103VE（液晶示例工程基线）
+- 核心架构：`Cortex-M3`
+- Flash 容量：`512KB`
+- RAM 容量：`64KB`
+
+### ESP32S3
+- 芯片型号：`ESP32-S3`
+- 开发板型号：ESP32-S3-DevKitC（默认）
+- 核心架构：`Xtensa`
+- Flash 容量：按模块配置（常见 4MB/8MB）
+- RAM：按芯片与配置
 
 ## 2. Bootloader 方案
 
-- 使用芯片 ROM bootloader，还是自定义 bootloader：
-- 如果是自定义 bootloader，当前是否已有代码：
-- bootloader 是否单独占一个 Flash 区域：
-- bootloader 是否支持跳转应用程序：
+- 方案类型：**应用内轻量 bootloader（A 方案） + 固件自动烧录（B 方案）双轨**
+- A 方案：
+  - 上电后短窗口监听 UART 升级包
+  - 校验成功后把 `.hbc` 写入 Flash 数据区
+  - 运行时优先加载 Flash 中的动态字节码，否则回退内置 `vm_program_data.c`
+- B 方案：
+  - 脚本执行 `hopping -> hbc -> vm_program_data.c -> Build -> Flash`
 
 ## 3. 下载链路
 
-- 第一阶段下载接口：`UART / USB CDC / BLE / WiFi`
-- 下载时使用的物理口：
-- 默认波特率或通信参数：
-- 是否需要上位机自动复位：
-- 是否需要自动进入下载模式：
+- 第一阶段接口：`UART`
+- 包协议（A 方案）：
+  - `magic(4) + version(1) + flags(1) + length(4LE) + crc32(4LE) + payload`
+  - `magic = "HUP1"`，`version = 1`
+- 默认串口参数：`115200 8N1`
 
 ## 4. 启动与控制引脚
 
-- `BOOT` 相关引脚：
-- `RESET` 相关引脚：
-- 下载时是否需要额外控制 IO：
-- 这些引脚当前是否已被别的功能占用：
+### STM32F103
+- 串口：`USART1 (PA9/PA10)`
+- LED：`PB0(LED2)`
+- 屏幕：ILI9341 FSMC
 
-## 5. IO 占用情况
+### ESP32S3
+- 串口：`UART0`（USB CDC / UART）
+- LED：`GPIO2`（默认）
 
-- 已经固定占用的 GPIO：
-- 可用于下载/调试的 UART：
-- LED、按键、传感器、无线模块占用：
-- 后续应用层需要保留的关键 IO：
+## 5. Flash 布局
 
-## 6. Flash 布局
+### STM32F103（当前实现）
+- 动态字节码数据区：`0x08070000`
+- 元数据区：`0x0807F000`
+- page size：`2KB`
+- payload 最大：`61440 bytes`
 
-- bootloader 起始地址：
-- bootloader 大小：
-- application 起始地址：
-- application 最大大小：
-- 是否需要备份区：
-- 是否需要配置区：
-- 扇区大小 / 页大小：
-- 擦除粒度：
-- 写入粒度：
+### ESP32S3（当前实现）
+- 使用名为 `hbc_slot` 的 DATA 分区（需在分区表提供）
+- 分区内：
+  - `offset 0`：元数据
+  - `offset 4096`：payload
+- payload 最大：`16384 bytes`（当前实现上限）
 
-## 7. 更新策略
+## 6. 更新策略
 
-- 整包覆盖，还是 A/B 双分区：
-- 更新失败是否要回滚：
-- 是否需要断点续传：
-- 是否允许掉电恢复：
+- 当前：单槽写入 + 完整性校验 + 内置程序回退
+- 校验失败：保持运行内置字节码（不会加载损坏动态包）
+- 后续可扩展：双槽 A/B 与真正版本回滚
 
-## 8. 运行模型
+## 7. 运行模型
 
-- 下载的是完整应用固件，还是 `.hopping` 编译后的 IR/字节码：
-- 端侧是直接跳应用，还是进入解释器：
-- 是否需要“热更新逻辑但不重启整机”：
+- 下载对象：`.hopping` 编译后的 `.hbc`
+- VM 执行优先级：
+  1. 动态 Flash 字节码（有效）
+  2. 内置 `vm_program_data.c`
 
-## 9. 安全与校验
+## 8. 安全与校验
 
-- 是否需要 CRC：
-- 是否需要版本号检查：
-- 是否需要签名校验：
-- 是否需要设备 ID 绑定：
+- 已实现：
+  - `magic`
+  - `version`
+  - `length` 上限检查
+  - `crc32`
+- 暂未实现：
+  - 签名校验
+  - 设备绑定
 
-## 10. 当前建议
+## 9. 对应脚本
 
-如果你还没定下来，建议先按这套最小方案推进：
+### F103
+- B 自动烧录：`tools/one_click_hbc_to_f103.bat`
+- A UART 下载：`tools/uart_hbc_update_f103.bat`
+- UART 发送工具：`tools/send_hbc_to_f103.ps1`
 
-- 芯片：先固定一块主控板
-- 下载链路：先 UART
-- 启动方式：bootloader 上电等待短时间，再跳应用
-- 更新对象：先下发完整字节码包，不先做完整固件 OTA
-- 校验：先做 `magic + version + length + crc32`
-- 回滚：第一版先不做 A/B，只保留 bootloader + 单应用区
-
-## 11. 最关键的五项
-
-如果你现在只想先告诉我最少的信息，请先给这五项：
-
-1. 芯片型号
-2. 开发板型号
-3. 下载接口
-4. Flash 容量与分区想法
-5. 当前 IO 占用情况
+### ESP32S3
+- B 自动烧录：`tools/one_click_hbc_to_esp32.bat`
+- A UART 下载：`tools/uart_hbc_update_esp32.bat`

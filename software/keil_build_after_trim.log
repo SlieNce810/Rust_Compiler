@@ -1,0 +1,11 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'sram'
+compiling vm_program_data.c...
+..\..\..\firmware\stm32f103\Core\Src\vm_program_data.c(23): warning:  #1-D: last line of file ends without a newline
+  const uint32_t g_vm_program_size = sizeof(g_vm_program);
+..\..\..\firmware\stm32f103\Core\Src\vm_program_data.c: 1 warning, 0 errors
+linking...
+Program Size: Code=12828 RO-data=15756 RW-data=32 ZI-data=63424  
+FromELF: creating hex file...
+"..\Output\Fire_F103VE.axf" - 0 Error(s), 1 Warning(s).
+Build Time Elapsed:  00:00:03

@@ -5,6 +5,7 @@ idf_component_register(
     SRCS "main.c"
          "vm_hal_esp32.c"
          "vm_program_data.c"
+         "bootloader_hbc_esp32.c"
     INCLUDE_DIRS "."
-    REQUIRES vm_core driver
+    REQUIRES vm_core driver esp_partition esp_timer
 )
