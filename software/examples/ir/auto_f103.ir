@@ -1,6 +1,6 @@
 function main
   pulse = 1
-  limit = 500
+  limit = 5000
   counter = limit
   label L0
   t0 = counter > 0

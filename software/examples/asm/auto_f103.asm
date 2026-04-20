@@ -5,7 +5,7 @@ main:
     mov fp, sp
     sub sp, sp, #12
     str #1, [fp, #-12]
-    str #500, [fp, #-8]
+    str #5000, [fp, #-8]
     ldr r4, [fp, #-8]
     str r4, [fp, #-4]
 L0:

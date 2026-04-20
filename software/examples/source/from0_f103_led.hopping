@@ -3,7 +3,7 @@ func int main() {
     int limit;
     int pulse;
 
-    pulse = 1;
+    pulse = 2;
     limit = 5000;
     counter = limit;
 
