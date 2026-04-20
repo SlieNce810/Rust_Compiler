@@ -48,3 +48,11 @@ uint32_t hal_millis(void) {
 void hal_delay_ms(uint32_t delay_ms) {
     HAL_Delay(delay_ms);
 }
+
+int hal_key1_read(void) {
+    return 0;
+}
+
+int hal_key2_read(void) {
+    return 0;
+}

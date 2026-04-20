@@ -19,5 +19,9 @@ void hal_log_int(const char *key, int value);
 uint32_t hal_millis(void);
 /* 毫秒阻塞延时。 */
 void hal_delay_ms(uint32_t delay_ms);
+/* 读取 K1 按键状态（按下=1，未按=0）。 */
+int hal_key1_read(void);
+/* 读取 K2 按键状态（按下=1，未按=0）。 */
+int hal_key2_read(void);
 
 #endif

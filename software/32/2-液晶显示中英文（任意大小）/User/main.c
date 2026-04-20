@@ -14,6 +14,12 @@
 #include <stdio.h>
 
 static uint16_t g_lcd_line = 0;
+#define KEY1_PIN GPIO_PIN_0
+#define KEY1_PORT GPIOA
+#define KEY1_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
+#define KEY2_PIN GPIO_PIN_13
+#define KEY2_PORT GPIOC
+#define KEY2_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
 static void lcd_clear_line(uint16_t line_index) {
     uint16_t y = (uint16_t)(line_index * 16U);
@@ -36,6 +42,21 @@ static void lcd_log_line(const char *text) {
     g_lcd_line++;
 }
 
+static void key_gpio_init(void) {
+    GPIO_InitTypeDef gpio_init = {0};
+    KEY1_CLK_ENABLE();
+    KEY2_CLK_ENABLE();
+
+    gpio_init.Mode = GPIO_MODE_INPUT;
+    gpio_init.Pull = GPIO_PULLUP;
+    gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    gpio_init.Pin = KEY1_PIN;
+    HAL_GPIO_Init(KEY1_PORT, &gpio_init);
+    gpio_init.Pin = KEY2_PIN;
+    HAL_GPIO_Init(KEY2_PORT, &gpio_init);
+}
+
 void hal_init(void) {
     LED_GPIO_Config();
     DEBUG_USART_Config();
@@ -45,6 +66,7 @@ void hal_init(void) {
     LCD_SetBackColor(BLACK);
     LCD_SetTextColor(WHITE);
     ILI9341_Clear(0, 0, LCD_X_LENGTH, LCD_Y_LENGTH);
+    key_gpio_init();
 
     LED2_OFF;
     lcd_log_line("[VM] f103 hal init");
@@ -79,6 +101,14 @@ uint32_t hal_millis(void) {
 
 void hal_delay_ms(uint32_t delay_ms) {
     HAL_Delay(delay_ms);
+}
+
+int hal_key1_read(void) {
+    return HAL_GPIO_ReadPin(KEY1_PORT, KEY1_PIN) == GPIO_PIN_RESET ? 1 : 0;
+}
+
+int hal_key2_read(void) {
+    return HAL_GPIO_ReadPin(KEY2_PORT, KEY2_PIN) == GPIO_PIN_RESET ? 1 : 0;
 }
 
 int main(void) {

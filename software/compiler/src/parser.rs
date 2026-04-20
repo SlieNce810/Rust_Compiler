@@ -97,12 +97,22 @@ impl Parser {
         // 这里按"首 token"分流，可以减少回溯，报错位置也更直观。
         match self.current_token() {
             Token::Int | Token::Float | Token::Bool => self.parse_declare_statement(),
-            Token::Name(_) => self.parse_assign_statement(),
+            Token::Name(_) => self.parse_name_start_statement(),
             Token::If => self.parse_if_statement(),
             Token::While => self.parse_while_statement(),
             Token::Return => self.parse_return_statement(),
             token => Err(format!("unexpected statement token: {token:?}")),
         }
+    }
+
+    // 解析以 Name 开头的语句：赋值或表达式语句（调用）。
+    fn parse_name_start_statement(&mut self) -> CompileResult<Statement> {
+        if self.next_token() == Some(&Token::LeftParen) {
+            let value = self.parse_expression()?;
+            self.expect(Token::Semicolon)?;
+            return Ok(Statement::ExpressionValue { value });
+        }
+        self.parse_assign_statement()
     }
 
     // 解析变量声明：int x;
@@ -257,7 +267,12 @@ impl Parser {
     fn parse_factor(&mut self) -> CompileResult<Expression> {
         match self.current_token() {
             // 变量名：x
-            Token::Name(_) => Ok(Expression::Variable(self.parse_name()?)),
+            Token::Name(_) => {
+                if self.next_token() == Some(&Token::LeftParen) {
+                    return self.parse_call_expression();
+                }
+                Ok(Expression::Variable(self.parse_name()?))
+            }
             // 整数：123
             Token::Integer(value) => {
                 let result = *value;
@@ -289,6 +304,26 @@ impl Parser {
             }
             token => Err(format!("unexpected factor token: {token:?}")),
         }
+    }
+
+    // 解析调用表达式：name(expr1, expr2, ...)
+    fn parse_call_expression(&mut self) -> CompileResult<Expression> {
+        let name = self.parse_name()?;
+        self.expect(Token::LeftParen)?;
+
+        let mut argument_list = Vec::new();
+        if !self.is_current(Token::RightParen) {
+            loop {
+                argument_list.push(self.parse_expression()?);
+                if !self.is_current(Token::Comma) {
+                    break;
+                }
+                self.advance();
+            }
+        }
+
+        self.expect(Token::RightParen)?;
+        Ok(Expression::Call { name, argument_list })
     }
 
     // 解析类型名：int, float, bool
@@ -334,6 +369,10 @@ impl Parser {
     // 获取当前 token。
     fn current_token(&self) -> &Token {
         &self.token_list[self.current_index]
+    }
+
+    fn next_token(&self) -> Option<&Token> {
+        self.token_list.get(self.current_index + 1)
     }
 
     // 前进到下一个 token。

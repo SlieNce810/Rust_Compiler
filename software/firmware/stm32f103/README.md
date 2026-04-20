@@ -11,6 +11,7 @@
 ## 1. 已接入能力
 
 - VM 执行结果驱动 LED 翻转（默认 `LED2/PB0`）
+- K1/K2 按键参与频率控制（`K1=PA0`、`K2=PC13`）
 - 日志双通道输出：
   - 串口：USART1 (`PA9/PA10`)
   - 屏幕：ILI9341（FSMC 并口）
@@ -49,7 +50,7 @@
 ## 5. 双轨升级命令
 
 - B 自动构建+下载（内置字节码）：
-  - `tools/one_click_hbc_to_f103.bat [examples/source/xxx.hopping] [flash_timeout_sec]`
+  - `tools/one_click_hbc_to_f103.bat [examples/source/xxx.hopping] [embed-only|build|flash] [flash_timeout_sec]`
 - A 真动态下载（UART 包）：
   - `tools/uart_hbc_update_f103.bat [examples/source/xxx.hopping] <COMx> [115200]`
 
@@ -58,12 +59,33 @@
 ### 5.1 脚本行为说明（稳定性增强）
 
 - `one_click_hbc_to_f103.bat`
+  - 第二参数 `mode`：`embed-only|build|flash`（默认 `embed-only`）。
+  - 第三参数 `flash_timeout_sec`（默认 20）仅在 `flash` 模式生效。
+  - `embed-only`：生成 `.hbc` 并写入 `vm_program_data.c`。
+  - `build`：在 `embed-only` 基础上执行 Keil 构建。
+  - `flash`：在 `build` 基础上执行自动烧录。
   - 优先使用 `STM32_Programmer_CLI` 烧录。
-  - 默认 20 秒超时（可用第二参数覆盖），超时会输出 `FLASH_TIMEOUT` 并自动回退到 `ST-LINK_CLI`。
+  - 默认 20 秒超时（可用第三参数覆盖），超时会输出 `FLASH_TIMEOUT` 并自动回退到 `ST-LINK_CLI`。
   - 两种 CLI 都失败时，会输出 `HEX` 路径用于手工烧录。
 - `uart_hbc_update_f103.bat`
   - 串口参数改为必填：不再默认 `COM3`。
   - 若未传串口，会报 `COM_PORT_REQUIRED` 并列出当前可用串口。
+
+### 5.2 K1/K2 调频点灯命令
+
+- 编译并更新内置字节码（不构建）：
+  - `tools/one_click_hbc_to_f103.bat examples/source/from0_f103_led.hopping embed-only`
+- 编译并构建：
+  - `tools/one_click_hbc_to_f103.bat examples/source/from0_f103_led.hopping build`
+- 编译、构建并烧录：
+  - `tools/one_click_hbc_to_f103.bat examples/source/from0_f103_led.hopping flash 20`
+- 使用 bootloader 热更新（UART）：
+  - `tools/uart_hbc_update_f103.bat examples/source/from0_f103_led.hopping COM5 115200`
+
+验收日志：
+- `vm_loaded = 1`
+- `bl_update = 6`（热更新成功）
+- `bl_slot = 1`（从 Flash 运行动态字节码）
 
 ## 6. RAM 裁剪边界（本轮新增）
 

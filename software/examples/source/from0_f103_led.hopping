@@ -1,15 +1,23 @@
 func int main() {
-    int counter;
-    int limit;
+    int interval_ms;
+    int key1_state;
+    int key2_state;
     int pulse;
 
-    pulse = 2;
-    limit = 5000;
-    counter = limit;
+    pulse = 1;
+    interval_ms = 220;
 
-    while (counter > 0) {
-        counter = counter - 1;
+    key1_state = key1_read();
+    key2_state = key2_read();
+
+    if (key1_state > 0) {
+        interval_ms = 80;
+    } else {
+        if (key2_state > 0) {
+            interval_ms = 520;
+        }
     }
 
+    sleep_ms(interval_ms);
     return pulse;
 }

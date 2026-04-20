@@ -1,14 +1,23 @@
 function main
   pulse = 1
-  limit = 5000
-  counter = limit
+  interval_ms = 220
+  t0 = call key1_read
+  key1_state = t0
+  t1 = call key2_read
+  key2_state = t1
+  t2 = key1_state > 0
+  ifz t2 goto L0
+  interval_ms = 80
+  goto L1
   label L0
-  t0 = counter > 0
-  ifz t0 goto L1
-  t1 = counter - 1
-  counter = t1
-  goto L0
+  t3 = key2_state > 0
+  ifz t3 goto L2
+  interval_ms = 520
+  goto L3
+  label L2
+  label L3
   label L1
+  t4 = call sleep_ms interval_ms
   return pulse
 end
 

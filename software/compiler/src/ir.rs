@@ -84,6 +84,9 @@ fn build_statement_line(statement: &Statement, context: &mut BuildContext) {
             let value_name = build_expression_value(value, context);
             context.line_list.push(format!("return {value_name}"));
         }
+        Statement::ExpressionValue { value } => {
+            let _ = build_expression_value(value, context);
+        }
 
         // if-else：翻译成条件跳转 + 无条件跳转 + 标签。
         Statement::IfElse {
@@ -164,6 +167,29 @@ fn build_expression_value(expression: &Expression, context: &mut BuildContext) -
                 .line_list
                 .push(format!("{temp_name} = {left_name} {operator_text} {right_name}"));
 
+            temp_name
+        }
+        Expression::Call {
+            name,
+            argument_list,
+        } => {
+            let temp_name = create_temp_name(context);
+            if argument_list.is_empty() {
+                context
+                    .line_list
+                    .push(format!("{temp_name} = call {name}"));
+                return temp_name;
+            }
+
+            let mut arg_name_list = Vec::new();
+            for argument in argument_list {
+                arg_name_list.push(build_expression_value(argument, context));
+            }
+            context.line_list.push(format!(
+                "{temp_name} = call {} {}",
+                name,
+                arg_name_list.join(" ")
+            ));
             temp_name
         }
     }

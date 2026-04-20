@@ -19,6 +19,11 @@ pub const OP_JMP: u8 = 0x09;
 pub const OP_JMP_IF_ZERO: u8 = 0x0A;
 pub const OP_RETURN: u8 = 0x0B;
 pub const OP_HALT: u8 = 0x0C;
+pub const OP_NATIVE: u8 = 0x0D;
+
+const NATIVE_KEY1_READ: u8 = 1;
+const NATIVE_KEY2_READ: u8 = 2;
+const NATIVE_SLEEP_MS: u8 = 3;
 
 const MODE_LHS_IMM: u8 = 0x01;
 const MODE_RHS_IMM: u8 = 0x02;
@@ -144,6 +149,26 @@ fn ensure_supported_ir_line(line: &str) -> Result<(), String> {
     if let Some((left, right)) = line.split_once(" = ") {
         if left.trim().is_empty() || right.trim().is_empty() {
             return Err(format!("bytecode v1 subset: invalid assignment: {line}"));
+        }
+        if let Some(call_part) = right.trim().strip_prefix("call ") {
+            let call_tokens = call_part.split_whitespace().collect::<Vec<_>>();
+            if call_tokens.is_empty() {
+                return Err(format!("bytecode v1 subset: invalid call assignment: {line}"));
+            }
+            match call_tokens[0] {
+                "key1_read" | "key2_read" => {
+                    if call_tokens.len() != 1 {
+                        return Err(format!("bytecode v1 subset: {} expects 0 args", call_tokens[0]));
+                    }
+                }
+                "sleep_ms" => {
+                    if call_tokens.len() != 2 {
+                        return Err("bytecode v1 subset: sleep_ms expects 1 arg".to_string());
+                    }
+                }
+                _ => return Err(format!("bytecode v1 subset: unsupported builtin call: {}", call_tokens[0])),
+            }
+            return Ok(());
         }
         return Ok(());
     }
@@ -281,6 +306,9 @@ fn encode_instructions(
 
 fn encode_assign(left: &str, right: &str, symbols: &HashMap<String, u8>) -> Result<EncodedInst, String> {
     let dst = reg_of(left, symbols)?;
+    if let Some(call_part) = right.strip_prefix("call ") {
+        return encode_call(dst, call_part, symbols);
+    }
     let parts = right.split_whitespace().collect::<Vec<_>>();
 
     if parts.len() == 1 {
@@ -373,6 +401,76 @@ fn encode_assign(left: &str, right: &str, symbols: &HashMap<String, u8>) -> Resu
         target: 0,
         imm,
     })
+}
+
+fn encode_call(dst: u8, call_part: &str, symbols: &HashMap<String, u8>) -> Result<EncodedInst, String> {
+    let parts = call_part.split_whitespace().collect::<Vec<_>>();
+    if parts.is_empty() {
+        return Err("invalid call expression".to_string());
+    }
+
+    let name = parts[0];
+    if name == "key1_read" {
+        if parts.len() != 1 {
+            return Err("key1_read expects 0 args".to_string());
+        }
+        return Ok(EncodedInst {
+            opcode: OP_NATIVE,
+            dst,
+            lhs: 0,
+            rhs: 0,
+            mode: 0,
+            reserved: NATIVE_KEY1_READ,
+            target: 0,
+            imm: 0,
+        });
+    }
+
+    if name == "key2_read" {
+        if parts.len() != 1 {
+            return Err("key2_read expects 0 args".to_string());
+        }
+        return Ok(EncodedInst {
+            opcode: OP_NATIVE,
+            dst,
+            lhs: 0,
+            rhs: 0,
+            mode: 0,
+            reserved: NATIVE_KEY2_READ,
+            target: 0,
+            imm: 0,
+        });
+    }
+
+    if name == "sleep_ms" {
+        if parts.len() != 2 {
+            return Err("sleep_ms expects 1 arg".to_string());
+        }
+        if let Some(ms) = parse_i32(parts[1]) {
+            return Ok(EncodedInst {
+                opcode: OP_NATIVE,
+                dst,
+                lhs: 0,
+                rhs: 0,
+                mode: MODE_RHS_IMM,
+                reserved: NATIVE_SLEEP_MS,
+                target: 0,
+                imm: ms,
+            });
+        }
+        return Ok(EncodedInst {
+            opcode: OP_NATIVE,
+            dst,
+            lhs: reg_of(parts[1], symbols)?,
+            rhs: 0,
+            mode: 0,
+            reserved: NATIVE_SLEEP_MS,
+            target: 0,
+            imm: 0,
+        });
+    }
+
+    Err(format!("unsupported builtin call: {name}"))
 }
 
 fn encode_goto(label: &str, labels: &HashMap<String, u16>) -> Result<EncodedInst, String> {
@@ -475,7 +573,10 @@ fn parse_i32(token: &str) -> Option<i32> {
 }
 
 fn is_keyword_token(token: &str) -> bool {
-    matches!(token, "+" | "-" | "*" | "/" | "==" | ">" | "<" | "goto")
+    matches!(
+        token,
+        "+" | "-" | "*" | "/" | "==" | ">" | "<" | "goto" | "call" | "key1_read" | "key2_read" | "sleep_ms"
+    )
 }
 
 fn write_u16(out: &mut Vec<u8>, value: usize, field_name: &str) -> Result<(), String> {

@@ -67,6 +67,8 @@ pub enum Statement {
     WhileLoop { condition: Expression, body_block: Block },
     // return 语句。
     ReturnValue { value: Expression },
+    // 表达式语句：比如 sleep_ms(100);
+    ExpressionValue { value: Expression },
 }
 
 // 表达式 = 可以计算出一个值的东西。
@@ -85,6 +87,11 @@ pub enum Expression {
         left: Box<Expression>,
         operator: BinaryOperator,
         right: Box<Expression>,
+    },
+    // 函数调用（当前主要用于内建函数）。
+    Call {
+        name: String,
+        argument_list: Vec<Expression>,
     },
 }
 

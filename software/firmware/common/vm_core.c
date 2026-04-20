@@ -1,4 +1,5 @@
 ﻿#include "vm_core.h"
+#include "vm_hal.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -20,6 +21,9 @@
 #define VM_VERSION 1
 #define VM_HEADER_SIZE 10
 #define VM_INSTR_SIZE 12
+#define VM_NATIVE_KEY1_READ 1
+#define VM_NATIVE_KEY2_READ 2
+#define VM_NATIVE_SLEEP_MS 3
 
 /* 小端读取工具：对应字节码 header/instruction 编码。 */
 static uint16_t read_u16(const uint8_t *p) {
@@ -165,15 +169,16 @@ static int is_mode_valid(uint8_t mode) {
 static VmErrorCode validate_instruction_format(const VmState *vm, uint16_t pc, const VmInstruction *inst) {
     (void)pc;
     if (!is_mode_valid(inst->mode)) return VM_ERR_BAD_HEADER;
-    if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
 
     switch (inst->opcode) {
         case VM_OP_NOP:
         case VM_OP_HALT:
+            if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
             return VM_OK;
 
         case VM_OP_MOV:
             /* MOV 支持 dst <- reg 或 dst <- imm。 */
+            if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
             if (check_reg(vm, inst->dst) != VM_OK) return VM_ERR_REG_OOB;
             if ((inst->mode & VM_MODE_RHS_IMM) == 0 && check_reg(vm, inst->lhs) != VM_OK) return VM_ERR_REG_OOB;
             return VM_OK;
@@ -186,6 +191,7 @@ static VmErrorCode validate_instruction_format(const VmState *vm, uint16_t pc, c
         case VM_OP_CMP_GT:
         case VM_OP_CMP_LT:
             /* 算术/比较类：必须有合法 dst，且每个操作数要么是寄存器要么是 imm。 */
+            if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
             if (check_reg(vm, inst->dst) != VM_OK) return VM_ERR_REG_OOB;
             if ((inst->mode & VM_MODE_LHS_IMM) == 0 && check_reg(vm, inst->lhs) != VM_OK) return VM_ERR_REG_OOB;
             if ((inst->mode & VM_MODE_RHS_IMM) == 0 && check_reg(vm, inst->rhs) != VM_OK) return VM_ERR_REG_OOB;
@@ -193,19 +199,36 @@ static VmErrorCode validate_instruction_format(const VmState *vm, uint16_t pc, c
             return VM_OK;
 
         case VM_OP_JMP:
+            if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
             if (inst->mode != 0) return VM_ERR_BAD_HEADER;
             return VM_OK;
 
         case VM_OP_JMP_IF_ZERO:
             /* ifz 统一语义：仅允许寄存器条件（reg == 0）。 */
+            if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
             if (inst->mode != 0) return VM_ERR_BAD_HEADER;
             if (check_reg(vm, inst->lhs) != VM_OK) return VM_ERR_REG_OOB;
             return VM_OK;
 
         case VM_OP_RETURN:
+            if (inst->reserved != 0) return VM_ERR_BAD_HEADER;
             if ((inst->mode & VM_MODE_RHS_IMM) != 0) return VM_ERR_BAD_HEADER;
             if ((inst->mode & VM_MODE_LHS_IMM) == 0 && check_reg(vm, inst->lhs) != VM_OK) return VM_ERR_REG_OOB;
             return VM_OK;
+
+        case VM_OP_NATIVE:
+            if (check_reg(vm, inst->dst) != VM_OK) return VM_ERR_REG_OOB;
+            if (inst->target != 0) return VM_ERR_BAD_HEADER;
+            if (inst->reserved == VM_NATIVE_KEY1_READ || inst->reserved == VM_NATIVE_KEY2_READ) {
+                if (inst->mode != 0) return VM_ERR_BAD_HEADER;
+                return VM_OK;
+            }
+            if (inst->reserved == VM_NATIVE_SLEEP_MS) {
+                if ((inst->mode & VM_MODE_LHS_IMM) != 0) return VM_ERR_BAD_HEADER;
+                if ((inst->mode & VM_MODE_RHS_IMM) == 0 && check_reg(vm, inst->lhs) != VM_OK) return VM_ERR_REG_OOB;
+                return VM_OK;
+            }
+            return VM_ERR_BAD_HEADER;
 
         default:
             return VM_ERR_BAD_OPCODE;
@@ -416,6 +439,43 @@ VmErrorCode vm_run(VmState *vm, uint32_t step_limit) {
                 vm->halted = 1;
                 vm->pc++;
                 break;
+
+            case VM_OP_NATIVE:
+                error = check_reg(vm, inst.dst);
+                if (error != VM_OK) {
+                    vm->error_code = error;
+                    return error;
+                }
+
+                if (inst.reserved == VM_NATIVE_KEY1_READ) {
+                    vm->regs[inst.dst] = hal_key1_read() ? 1 : 0;
+                    vm->pc++;
+                    break;
+                }
+                if (inst.reserved == VM_NATIVE_KEY2_READ) {
+                    vm->regs[inst.dst] = hal_key2_read() ? 1 : 0;
+                    vm->pc++;
+                    break;
+                }
+                if (inst.reserved == VM_NATIVE_SLEEP_MS) {
+                    if ((inst.mode & VM_MODE_RHS_IMM) != 0) {
+                        value = inst.imm;
+                    } else {
+                        error = read_value(vm, inst.lhs, &value);
+                        if (error != VM_OK) {
+                            vm->error_code = error;
+                            return error;
+                        }
+                    }
+                    if (value < 0) value = 0;
+                    hal_delay_ms((uint32_t)value);
+                    vm->regs[inst.dst] = 0;
+                    vm->pc++;
+                    break;
+                }
+
+                vm->error_code = VM_ERR_BAD_OPCODE;
+                return vm->error_code;
 
             default:
                 vm->error_code = VM_ERR_BAD_OPCODE;

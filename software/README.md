@@ -247,7 +247,7 @@ cargo run -- ..\examples\source\esp32_blink.hopping -o ..\examples\asm\esp32_bli
 ### STM32F103
 
 - B 自动构建+下载（内置字节码）：
-  - `tools\one_click_hbc_to_f103.bat [examples/source/xxx.hopping] [flash_timeout_sec]`
+  - `tools\one_click_hbc_to_f103.bat [examples/source/xxx.hopping] [embed-only|build|flash] [flash_timeout_sec]`
 - A 真动态下载（UART 包下发）：
   - `tools\uart_hbc_update_f103.bat [examples/source/xxx.hopping] <COMx> [115200]`
 - UART 发包脚本：
@@ -265,7 +265,11 @@ cargo run -- ..\examples\source\esp32_blink.hopping -o ..\examples\asm\esp32_bli
 ### 10.5 脚本行为（当前版本）
 
 - `tools\one_click_hbc_to_f103.bat`
-  - 第二参数可选：`flash_timeout_sec`，默认 `20` 秒。
+  - 第二参数可选：`mode`，支持 `embed-only|build|flash`，默认 `embed-only`。
+  - 第三参数可选：`flash_timeout_sec`，默认 `20` 秒（仅 `flash` 模式生效）。
+  - `embed-only`：只做 `.hopping -> .hbc -> vm_program_data.c`。
+  - `build`：在 `embed-only` 基础上执行 Keil build。
+  - `flash`：在 `build` 基础上自动烧录。
   - 烧录优先使用 `STM32_Programmer_CLI`。
   - 超时会输出 `FLASH_TIMEOUT`，并自动回退到 `ST-LINK_CLI`（若可用）。
   - 若最终仍失败，会打印 `HEX` 路径用于手工烧录。
@@ -276,6 +280,45 @@ cargo run -- ..\examples\source\esp32_blink.hopping -o ..\examples\asm\esp32_bli
 
 - `warning: constant OP_NOP is never used`
   - 这是 Rust 编译器告警，不影响 `.hbc` 生成与 UART 发包流程。
+
+## 10.6 F103 K1/K2 调频点灯 Demo（当前可用）
+
+- Hopping 内建函数（新增）：
+  - `key1_read()`：读 K1，按下返回 `1`，否则 `0`
+  - `key2_read()`：读 K2，按下返回 `1`，否则 `0`
+  - `sleep_ms(int)`：毫秒延时
+- 按键引脚（指南者）：
+  - `K1 = PA0`
+  - `K2 = PC13`
+
+### 编译并写入内置字节码
+
+```bat
+cd /d E:\02_competition\Rust_Compiler\software
+tools\one_click_hbc_to_f103.bat examples/source/from0_f103_led.hopping embed-only
+```
+
+### 编译 + Keil 构建（不烧录）
+
+```bat
+tools\one_click_hbc_to_f103.bat examples/source/from0_f103_led.hopping build
+```
+
+### 编译 + 构建 + 烧录
+
+```bat
+tools\one_click_hbc_to_f103.bat examples/source/from0_f103_led.hopping flash 20
+```
+
+### 真 bootloader 热更新（UART）
+
+```bat
+tools\uart_hbc_update_f103.bat examples/source/from0_f103_led.hopping COM5 115200
+```
+
+成功日志口径（端侧串口/LCD）：
+- `bl_update = 6`：升级包校验并写入成功
+- `bl_slot = 1`：本次从 Flash 动态字节码运行
 
 ## 11. 文件结构（当前）
 ``` 

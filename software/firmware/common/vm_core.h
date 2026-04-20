@@ -26,6 +26,7 @@
 #define VM_OP_JMP_IF_ZERO 0x0A
 #define VM_OP_RETURN 0x0B
 #define VM_OP_HALT 0x0C
+#define VM_OP_NATIVE 0x0D
 
 /* 解释器错误码：
  * - 1~7 主要是加载/解析阶段错误

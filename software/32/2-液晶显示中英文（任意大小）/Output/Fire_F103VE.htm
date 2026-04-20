@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\Output\Fire_F103VE.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\Output\Fire_F103VE.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Apr 20 21:34:34 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Apr 20 22:09:23 2026
 <BR><P>
 <H3>Maximum Stack Usage =       1480 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -100,7 +100,7 @@ Global Symbols
 <P><STRONG><a name="[48]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry.o(.ARM.Collect$$$$00000000))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xe.o(.text)
 </UL>
-<P><STRONG><a name="[ba]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
+<P><STRONG><a name="[be]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
 
 <P><STRONG><a name="[4b]"></a>_main_scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry5.o(.ARM.Collect$$$$00000004))
 <BR><BR>[Calls]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
@@ -110,15 +110,15 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
 </UL>
 
-<P><STRONG><a name="[bb]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
+<P><STRONG><a name="[bf]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
 
-<P><STRONG><a name="[bc]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
+<P><STRONG><a name="[c0]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
 
-<P><STRONG><a name="[bd]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
+<P><STRONG><a name="[c1]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
 
-<P><STRONG><a name="[be]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
+<P><STRONG><a name="[c2]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
 
-<P><STRONG><a name="[bf]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
+<P><STRONG><a name="[c3]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
 
 <P><STRONG><a name="[0]"></a>Reset_Handler</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, startup_stm32f103xe.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xe.o(RESET)
@@ -308,27 +308,27 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FLASH_Program
 </UL>
 
-<P><STRONG><a name="[c0]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
+<P><STRONG><a name="[c4]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
 
 <P><STRONG><a name="[9e]"></a>__aeabi_memcpy</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, memcpya.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;flash_write_words
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_symbols
+<LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_symbols
 </UL>
 
 <P><STRONG><a name="[9d]"></a>__aeabi_memcpy4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;flash_store_payload
 </UL>
 
-<P><STRONG><a name="[c1]"></a>__aeabi_memcpy8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text), UNUSED)
+<P><STRONG><a name="[c5]"></a>__aeabi_memcpy8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text), UNUSED)
 
 <P><STRONG><a name="[4e]"></a>__aeabi_memset</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_memset$wrapper
 <LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
 
-<P><STRONG><a name="[c2]"></a>__aeabi_memset4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[c6]"></a>__aeabi_memset4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
-<P><STRONG><a name="[c3]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[c7]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
 <P><STRONG><a name="[4d]"></a>__aeabi_memclr</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
@@ -337,17 +337,17 @@ Global Symbols
 <P><STRONG><a name="[8b]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;flash_store_payload
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_init
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_init
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clear_state
 </UL>
 
-<P><STRONG><a name="[c4]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[c8]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
 <P><STRONG><a name="[4f]"></a>_memset$wrapper</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
 
-<P><STRONG><a name="[c5]"></a>__aeabi_uidiv</STRONG> (Thumb, 0 bytes, Stack size 12 bytes, uidiv.o(.text), UNUSED)
+<P><STRONG><a name="[c9]"></a>__aeabi_uidiv</STRONG> (Thumb, 0 bytes, Stack size 12 bytes, uidiv.o(.text), UNUSED)
 
 <P><STRONG><a name="[90]"></a>__aeabi_uidivmod</STRONG> (Thumb, 44 bytes, Stack size 12 bytes, uidiv.o(.text), UNUSED)
 <BR><BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
@@ -359,7 +359,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_main_scatterload
 </UL>
 
-<P><STRONG><a name="[c6]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
+<P><STRONG><a name="[ca]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
 <P><STRONG><a name="[4]"></a>BusFault_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f1xx_it.o(i.BusFault_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xe.o(RESET)
@@ -452,6 +452,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_GPIO_Config
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_GPIO_Config
+<LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_gpio_init
+</UL>
+
+<P><STRONG><a name="[a6]"></a>HAL_GPIO_ReadPin</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, stm32f1xx_hal_gpio.o(i.HAL_GPIO_ReadPin))
+<BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_key2_read
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_key1_read
 </UL>
 
 <P><STRONG><a name="[54]"></a>HAL_GetTick</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f1xx_hal.o(i.HAL_GetTick))
@@ -463,7 +469,7 @@ Global Symbols
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive
 <LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_try_uart_update
-<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_millis
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_millis
 </UL>
 
 <P><STRONG><a name="[89]"></a>HAL_IncTick</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32f1xx_hal.o(i.HAL_IncTick))
@@ -625,8 +631,8 @@ Global Symbols
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_OpenWindow
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_init
-<LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear_line
+<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
+<LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear_line
 </UL>
 
 <P><STRONG><a name="[7a]"></a>ILI9341_DispChar_EN</STRONG> (Thumb, 138 bytes, Stack size 40 bytes, bsp_ili9341_lcd.o(i.ILI9341_DispChar_EN))
@@ -644,7 +650,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_DispChar_EN
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
+<BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
 </UL>
 
 <P><STRONG><a name="[80]"></a>ILI9341_GramScan</STRONG> (Thumb, 208 bytes, Stack size 8 bytes, bsp_ili9341_lcd.o(i.ILI9341_GramScan))
@@ -773,31 +779,31 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
 </UL>
 
-<P><STRONG><a name="[c7]"></a>__1printf$6</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf6.o(i.__0printf$6), UNUSED)
+<P><STRONG><a name="[cb]"></a>__1printf$6</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf6.o(i.__0printf$6), UNUSED)
 
-<P><STRONG><a name="[a6]"></a>__2printf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf6.o(i.__0printf$6))
+<P><STRONG><a name="[aa]"></a>__2printf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf6.o(i.__0printf$6))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = __2printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
+<BR>[Called By]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
 </UL>
 
 <P><STRONG><a name="[8e]"></a>__0snprintf$6</STRONG> (Thumb, 44 bytes, Stack size 32 bytes, printf6.o(i.__0snprintf$6), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
 </UL>
 
-<P><STRONG><a name="[c8]"></a>__1snprintf$6</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, printf6.o(i.__0snprintf$6), UNUSED)
+<P><STRONG><a name="[cc]"></a>__1snprintf$6</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, printf6.o(i.__0snprintf$6), UNUSED)
 
-<P><STRONG><a name="[a5]"></a>__2snprintf</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, printf6.o(i.__0snprintf$6))
+<P><STRONG><a name="[a9]"></a>__2snprintf</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, printf6.o(i.__0snprintf$6))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __2snprintf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
+<BR>[Called By]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
 </UL>
 
-<P><STRONG><a name="[c9]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[cd]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[ca]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[ce]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[cb]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[cf]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[92]"></a>bootloader_load_program_from_flash</STRONG> (Thumb, 100 bytes, Stack size 24 bytes, bootloader_hbc.o(i.bootloader_load_program_from_flash))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = bootloader_load_program_from_flash &rArr; crc32_calc &rArr; crc32_update
@@ -831,10 +837,11 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+<LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[a0]"></a>hal_init</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, main.o(i.hal_init))
+<P><STRONG><a name="[a0]"></a>hal_init</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, main.o(i.hal_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = hal_init &rArr; lcd_log_line &rArr; ILI9341_DispString_EN &rArr; ILI9341_DispChar_EN &rArr; ILI9341_OpenWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_GPIO_Config
@@ -844,26 +851,43 @@ Global Symbols
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_GramScan
 <LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_Clear
 <LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEBUG_USART_Config
-<LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
+<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
+<LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_gpio_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ab]"></a>hal_led_write</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, main.o(i.hal_led_write))
+<P><STRONG><a name="[a5]"></a>hal_key1_read</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, main.o(i.hal_key1_read))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = hal_key1_read
+</UL>
+<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_ReadPin
+</UL>
+<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+</UL>
+
+<P><STRONG><a name="[a7]"></a>hal_key2_read</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, main.o(i.hal_key2_read))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = hal_key2_read
+</UL>
+<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_ReadPin
+</UL>
+<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+</UL>
+
+<P><STRONG><a name="[af]"></a>hal_led_write</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, main.o(i.hal_led_write))
 <BR><BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[a4]"></a>hal_log_int</STRONG> (Thumb, 50 bytes, Stack size 120 bytes, main.o(i.hal_log_int))
+<P><STRONG><a name="[a8]"></a>hal_log_int</STRONG> (Thumb, 50 bytes, Stack size 120 bytes, main.o(i.hal_log_int))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = hal_log_int &rArr; lcd_log_line &rArr; ILI9341_DispString_EN &rArr; ILI9341_DispChar_EN &rArr; ILI9341_OpenWindow
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
-<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2snprintf
-<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
+<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2snprintf
+<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[a7]"></a>hal_millis</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, main.o(i.hal_millis))
+<P><STRONG><a name="[ab]"></a>hal_millis</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, main.o(i.hal_millis))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = hal_millis
 </UL>
 <BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
@@ -875,47 +899,50 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 1480<LI>Call Chain = main &rArr; bootloader_try_uart_update &rArr; flash_store_payload &rArr; flash_write_words &rArr; HAL_FLASH_Program &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
-<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
-<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_try_uart_update
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_load_program_from_flash
-<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_millis
-<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
-<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_led_write
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_millis
+<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_led_write
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_init
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_delay_ms
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[b8]"></a>vm_init</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, vm_core.o(i.vm_init))
+<P><STRONG><a name="[bc]"></a>vm_init</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, vm_core.o(i.vm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vm_init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 </UL>
 
-<P><STRONG><a name="[a9]"></a>vm_load_program</STRONG> (Thumb, 118 bytes, Stack size 24 bytes, vm_core.o(i.vm_load_program))
+<P><STRONG><a name="[ad]"></a>vm_load_program</STRONG> (Thumb, 118 bytes, Stack size 24 bytes, vm_core.o(i.vm_load_program))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = vm_load_program &rArr; validate_jump_targets &rArr; read_instruction
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_init
-<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_jump_targets
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_symbols
-<LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_header
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_init
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_jump_targets
+<LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_symbols
+<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_header
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clear_state
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;attach_instruction_view
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;attach_instruction_view
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[aa]"></a>vm_run</STRONG> (Thumb, 694 bytes, Stack size 56 bytes, vm_core.o(i.vm_run))
+<P><STRONG><a name="[ae]"></a>vm_run</STRONG> (Thumb, 888 bytes, Stack size 56 bytes, vm_core.o(i.vm_run))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = vm_run &rArr; read_binary_side &rArr; read_value
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_value
-<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
-<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_binary_side
-<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_reg
+<BR>[Calls]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_key2_read
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_key1_read
+<LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_delay_ms
+<LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_value
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
+<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_binary_side
+<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -970,22 +997,30 @@ Local Symbols
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive
 </UL>
 
-<P><STRONG><a name="[a8]"></a>lcd_clear_line</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, main.o(i.lcd_clear_line))
+<P><STRONG><a name="[a3]"></a>key_gpio_init</STRONG> (Thumb, 110 bytes, Stack size 24 bytes, main.o(i.key_gpio_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = key_gpio_init &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_init
+</UL>
+
+<P><STRONG><a name="[ac]"></a>lcd_clear_line</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, main.o(i.lcd_clear_line))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = lcd_clear_line &rArr; ILI9341_Clear &rArr; ILI9341_OpenWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_Clear
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
+<BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_log_line
 </UL>
 
-<P><STRONG><a name="[a3]"></a>lcd_log_line</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, main.o(i.lcd_log_line))
+<P><STRONG><a name="[a4]"></a>lcd_log_line</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, main.o(i.lcd_log_line))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = lcd_log_line &rArr; ILI9341_DispString_EN &rArr; ILI9341_DispChar_EN &rArr; ILI9341_OpenWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_DispString_EN
 <LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_Clear
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear_line
+<LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear_line
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
+<BR>[Called By]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_log_int
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hal_init
 </UL>
 
@@ -1034,16 +1069,16 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_Init
 </UL>
 
-<P><STRONG><a name="[b9]"></a>attach_instruction_view</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, vm_core.o(i.attach_instruction_view))
+<P><STRONG><a name="[bd]"></a>attach_instruction_view</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, vm_core.o(i.attach_instruction_view))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = attach_instruction_view
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 </UL>
 
-<P><STRONG><a name="[b4]"></a>check_reg</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, vm_core.o(i.check_reg))
-<BR><BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
-<LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_instruction_format
-<LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_value
+<P><STRONG><a name="[b8]"></a>check_reg</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, vm_core.o(i.check_reg))
+<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_instruction_format
+<LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_value
 </UL>
 
 <P><STRONG><a name="[98]"></a>clear_state</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, vm_core.o(i.clear_state))
@@ -1051,88 +1086,88 @@ Local Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 </UL>
 
-<P><STRONG><a name="[b6]"></a>is_mode_valid</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, vm_core.o(i.is_mode_valid))
-<BR><BR>[Called By]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_instruction_format
+<P><STRONG><a name="[ba]"></a>is_mode_valid</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, vm_core.o(i.is_mode_valid))
+<BR><BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_instruction_format
 </UL>
 
-<P><STRONG><a name="[ad]"></a>is_program_header_valid</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, vm_core.o(i.is_program_header_valid))
-<BR><BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_header
+<P><STRONG><a name="[b1]"></a>is_program_header_valid</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, vm_core.o(i.is_program_header_valid))
+<BR><BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_header
 </UL>
 
-<P><STRONG><a name="[ac]"></a>parse_header</STRONG> (Thumb, 142 bytes, Stack size 24 bytes, vm_core.o(i.parse_header))
+<P><STRONG><a name="[b0]"></a>parse_header</STRONG> (Thumb, 142 bytes, Stack size 24 bytes, vm_core.o(i.parse_header))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = parse_header
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_u16
-<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_program_header_valid
+<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_u16
+<LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_program_header_valid
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 </UL>
 
-<P><STRONG><a name="[af]"></a>parse_symbols</STRONG> (Thumb, 166 bytes, Stack size 40 bytes, vm_core.o(i.parse_symbols))
+<P><STRONG><a name="[b3]"></a>parse_symbols</STRONG> (Thumb, 166 bytes, Stack size 40 bytes, vm_core.o(i.parse_symbols))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = parse_symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_u16
+<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_u16
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 </UL>
 
-<P><STRONG><a name="[b0]"></a>read_binary_side</STRONG> (Thumb, 36 bytes, Stack size 24 bytes, vm_core.o(i.read_binary_side))
+<P><STRONG><a name="[b4]"></a>read_binary_side</STRONG> (Thumb, 36 bytes, Stack size 24 bytes, vm_core.o(i.read_binary_side))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = read_binary_side &rArr; read_value
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_value
+<BR>[Calls]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_value
 </UL>
-<BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
-</UL>
-
-<P><STRONG><a name="[b3]"></a>read_i32</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, vm_core.o(i.read_i32))
-<BR><BR>[Called By]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
+<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
 </UL>
 
-<P><STRONG><a name="[b2]"></a>read_instruction</STRONG> (Thumb, 86 bytes, Stack size 32 bytes, vm_core.o(i.read_instruction))
+<P><STRONG><a name="[b7]"></a>read_i32</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, vm_core.o(i.read_i32))
+<BR><BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
+</UL>
+
+<P><STRONG><a name="[b6]"></a>read_instruction</STRONG> (Thumb, 86 bytes, Stack size 32 bytes, vm_core.o(i.read_instruction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = read_instruction
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_u16
-<LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_i32
+<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_u16
+<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_i32
 </UL>
-<BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
-<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_jump_targets
-</UL>
-
-<P><STRONG><a name="[ae]"></a>read_u16</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, vm_core.o(i.read_u16))
-<BR><BR>[Called By]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_symbols
-<LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_header
+<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_jump_targets
 </UL>
 
-<P><STRONG><a name="[b1]"></a>read_value</STRONG> (Thumb, 42 bytes, Stack size 24 bytes, vm_core.o(i.read_value))
+<P><STRONG><a name="[b2]"></a>read_u16</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, vm_core.o(i.read_u16))
+<BR><BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
+<LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_symbols
+<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_header
+</UL>
+
+<P><STRONG><a name="[b5]"></a>read_value</STRONG> (Thumb, 42 bytes, Stack size 24 bytes, vm_core.o(i.read_value))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = read_value
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_reg
+<BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_reg
 </UL>
-<BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
-<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_binary_side
+<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_run
+<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_binary_side
 </UL>
 
-<P><STRONG><a name="[b5]"></a>validate_instruction_format</STRONG> (Thumb, 270 bytes, Stack size 16 bytes, vm_core.o(i.validate_instruction_format))
+<P><STRONG><a name="[b9]"></a>validate_instruction_format</STRONG> (Thumb, 404 bytes, Stack size 16 bytes, vm_core.o(i.validate_instruction_format))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = validate_instruction_format
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_mode_valid
-<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_reg
+<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_mode_valid
+<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_reg
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_jump_targets
+<BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_jump_targets
 </UL>
 
-<P><STRONG><a name="[b7]"></a>validate_jump_targets</STRONG> (Thumb, 86 bytes, Stack size 32 bytes, vm_core.o(i.validate_jump_targets))
+<P><STRONG><a name="[bb]"></a>validate_jump_targets</STRONG> (Thumb, 86 bytes, Stack size 32 bytes, vm_core.o(i.validate_jump_targets))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = validate_jump_targets &rArr; read_instruction
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_instruction_format
-<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
+<BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate_instruction_format
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_instruction
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
+<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vm_load_program
 </UL>
 
 <P><STRONG><a name="[93]"></a>crc32_calc</STRONG> (Thumb, 38 bytes, Stack size 24 bytes, bootloader_hbc.o(i.crc32_calc))

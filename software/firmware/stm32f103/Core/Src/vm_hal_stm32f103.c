@@ -24,6 +24,10 @@
 
 static volatile uint32_t g_tick_ms = 0;
 static uint16_t g_lcd_line = 0;
+#define KEY1_PIN GPIO_Pin_0
+#define KEY1_PORT GPIOA
+#define KEY2_PIN GPIO_Pin_13
+#define KEY2_PORT GPIOC
 
 static void lcd_clear_line(uint16_t line_index) {
     uint16_t y = (uint16_t)(line_index * 16U);
@@ -47,6 +51,19 @@ static void lcd_log_line(const char *text) {
     g_lcd_line++;
 }
 
+static void key_gpio_init(void) {
+    GPIO_InitTypeDef gpio_init;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOC, ENABLE);
+
+    gpio_init.GPIO_Mode = GPIO_Mode_IPU;
+    gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
+
+    gpio_init.GPIO_Pin = KEY1_PIN;
+    GPIO_Init(KEY1_PORT, &gpio_init);
+    gpio_init.GPIO_Pin = KEY2_PIN;
+    GPIO_Init(KEY2_PORT, &gpio_init);
+}
+
 void hal_init(void) {
     LED_GPIO_Config();
     USART_Config();
@@ -56,6 +73,7 @@ void hal_init(void) {
     LCD_SetBackColor(BLACK);
     LCD_SetTextColor(WHITE);
     ILI9341_Clear(0, 0, LCD_X_LENGTH, LCD_Y_LENGTH);
+    key_gpio_init();
 
     LED2_OFF;
     lcd_log_line("[VM] f103 hal init");
@@ -93,6 +111,14 @@ void hal_delay_ms(uint32_t delay_ms) {
     while ((g_tick_ms - start) < delay_ms) {
         /* busy wait */
     }
+}
+
+int hal_key1_read(void) {
+    return GPIO_ReadInputDataBit(KEY1_PORT, KEY1_PIN) == Bit_RESET ? 1 : 0;
+}
+
+int hal_key2_read(void) {
+    return GPIO_ReadInputDataBit(KEY2_PORT, KEY2_PIN) == Bit_RESET ? 1 : 0;
 }
 
 void SysTick_Handler(void) {

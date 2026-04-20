@@ -135,6 +135,11 @@ fn check_statement(statement: &Statement, type_by_name: &mut HashMap<String, Typ
             }
             Ok(())
         }
+        // 表达式语句：目前主要用于内建调用（sleep_ms）。
+        Statement::ExpressionValue { value } => {
+            get_expression_type(value, type_by_name)?;
+            Ok(())
+        }
     }
 }
 
@@ -162,6 +167,36 @@ fn get_expression_type(expression: &Expression, type_by_name: &HashMap<String, T
             let right_type = get_expression_type(right, type_by_name)?;
             check_binary_type(left_type, *operator, right_type)
         }
+        Expression::Call {
+            name,
+            argument_list,
+        } => check_builtin_call(name, argument_list, type_by_name),
+    }
+}
+
+fn check_builtin_call(
+    name: &str,
+    argument_list: &[Expression],
+    type_by_name: &HashMap<String, TypeName>,
+) -> CompileResult<TypeName> {
+    match name {
+        "key1_read" | "key2_read" => {
+            if !argument_list.is_empty() {
+                return Err(format!("builtin {name} expects 0 args, got {}", argument_list.len()));
+            }
+            Ok(TypeName::Int)
+        }
+        "sleep_ms" => {
+            if argument_list.len() != 1 {
+                return Err(format!("builtin sleep_ms expects 1 arg, got {}", argument_list.len()));
+            }
+            let arg_type = get_expression_type(&argument_list[0], type_by_name)?;
+            if arg_type != TypeName::Int {
+                return Err(format!("builtin sleep_ms arg type mismatch: expected int, got {arg_type}"));
+            }
+            Ok(TypeName::Int)
+        }
+        _ => Err(format!("unknown function call: {name}")),
     }
 }
 
